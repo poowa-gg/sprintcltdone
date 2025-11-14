@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 style="margin-bottom: 25px;">Add Farmer Feedback</h2>
+
+<div class="card">
+    <form method="POST">
+        <div class="form-group">
+            <label for="farmer_id">Select Farmer</label>
+            <select id="farmer_id" name="farmer_id" required>
+                <option value="">-- Choose a farmer --</option>
+                {% for farmer in farmers %}
+                <option value="{{ farmer.farmer_id }}">
+                    {{ farmer.phone_number }} ({{ "%.4f"|format(farmer.lat) }}, {{ "%.4f"|format(farmer.lon) }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="feedback_text">Feedback</label>
+            <textarea id="feedback_text" name="feedback_text" placeholder="Enter farmer's feedback about the alert..." required></textarea>
+        </div>
+        
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="cost_saving" name="cost_saving">
+            <label for="cost_saving" style="margin: 0;">This feedback indicates cost savings or prevented loss</label>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-success">Save Feedback</button>
+            <a href="{{ url_for('feedback') }}" class="btn">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Example Feedback</h3>
+    <ul style="padding-left: 20px;">
+        <li style="margin-bottom: 10px;">"The alert helped me delay fertilizer application and saved money"</li>
+        <li style="margin-bottom: 10px;">"I avoided spraying during the rain, preventing waste"</li>
+        <li style="margin-bottom: 10px;">"The heat warning helped me schedule irrigation better"</li>
+        <li>"Alert was accurate and timely, very helpful"</li>
+    </ul>
+</div>
+{% endblock %}

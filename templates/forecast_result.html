@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 style="margin-bottom: 25px;">Forecast Results</h2>
+
+<div class="card">
+    <h3>Location: {{ "%.4f"|format(lat) }}, {{ "%.4f"|format(lon) }}</h3>
+    
+    {% if conditions %}
+        <div style="margin: 20px 0;">
+            <h4 style="color: #e74c3c;">⚠️ Alert Conditions Detected</h4>
+            {% for condition in conditions %}
+            <div class="alert-message" style="margin: 10px 0;">
+                <strong>Type:</strong> 
+                {% if condition.peril_type == 'rain' %}
+                    🌧️ Heavy Rain
+                {% else %}
+                    🌡️ Heat Stress
+                {% endif %}
+                <br>
+                <strong>Description:</strong> {{ condition.description }}<br>
+                <strong>Time:</strong> {{ condition.timestamp }}<br>
+                <strong>Duration:</strong> {{ condition.duration_hours }} hour(s)
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="margin: 20px 0; padding: 15px; background: #d4edda; border-radius: 5px; color: #155724;">
+            ✓ No alert conditions detected in the next 48 hours
+        </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">24-Hour Forecast</h3>
+    <table>
+        <tr>
+            <th>Time</th>
+            <th>Temperature (°C)</th>
+            <th>Precipitation (mm)</th>
+            <th>Humidity (%)</th>
+        </tr>
+        {% for hour in forecast %}
+        <tr>
+            <td>{{ hour.timestamp[11:16] }}</td>
+            <td>{{ "%.1f"|format(hour.temperature_c) }}°C</td>
+            <td>
+                {% if hour.precipitation_mm > 0 %}
+                    <strong style="color: #3498db;">{{ "%.2f"|format(hour.precipitation_mm) }}mm</strong>
+                {% else %}
+                    0mm
+                {% endif %}
+            </td>
+            <td>{{ hour.humidity }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{{ url_for('forecast') }}" class="btn">← Query Another Location</a>
+</div>
+{% endblock %}

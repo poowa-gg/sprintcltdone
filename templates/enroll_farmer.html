@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 style="margin-bottom: 25px;">Enroll New Farmer</h2>
+
+<div class="card">
+    <form method="POST">
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone" placeholder="+2348012345678" required>
+            <small style="color: #666;">Use E.164 format (e.g., +234...)</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="lat">Latitude</label>
+            <input type="number" id="lat" name="lat" step="0.0001" placeholder="6.5244" required>
+            <small style="color: #666;">Range: -90 to 90</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="lon">Longitude</label>
+            <input type="number" id="lon" name="lon" step="0.0001" placeholder="3.3792" required>
+            <small style="color: #666;">Range: -180 to 180</small>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-success">Enroll Farmer</button>
+            <a href="{{ url_for('farmers') }}" class="btn">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Sample Nigerian Farm Locations</h3>
+    <table>
+        <tr>
+            <th>Location</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+        </tr>
+        <tr><td>Lagos (Ikorodu)</td><td>6.6186</td><td>3.5105</td></tr>
+        <tr><td>Ogun (Abeokuta)</td><td>7.1475</td><td>3.3619</td></tr>
+        <tr><td>Oyo (Ibadan)</td><td>7.3775</td><td>3.9470</td></tr>
+        <tr><td>Kano</td><td>12.0022</td><td>8.5919</td></tr>
+        <tr><td>Plateau (Jos)</td><td>9.8965</td><td>8.8583</td></tr>
+    </table>
+</div>
+{% endblock %}

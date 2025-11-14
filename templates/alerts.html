@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <h2>Weather Alerts</h2>
+    <form method="POST" action="{{ url_for('generate_alerts') }}" style="display: inline;">
+        <button type="submit" class="btn btn-success">🔔 Generate New Alerts</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Pending Alerts</h3>
+    {% if alerts %}
+        {% for alert in alerts %}
+        <div class="alert-message">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                <div>
+                    <strong>Alert ID:</strong> <code>{{ alert.alert_id[:8] }}...</code><br>
+                    <strong>Farmer ID:</strong> <code>{{ alert.farmer_id[:8] }}...</code><br>
+                    <strong>Type:</strong> 
+                    {% if alert.peril_type == 'rain' %}
+                        <span class="badge" style="background: #3498db; color: white;">🌧️ Heavy Rain</span>
+                    {% else %}
+                        <span class="badge" style="background: #e74c3c; color: white;">🌡️ Heat Stress</span>
+                    {% endif %}
+                    <br>
+                    <strong>Severity:</strong> {{ "%.1f"|format(alert.severity) }}
+                    {% if alert.peril_type == 'rain' %}mm{% else %}index{% endif %}
+                </div>
+                <form method="POST" action="{{ url_for('mark_delivered', alert_id=alert.alert_id) }}">
+                    <button type="submit" class="btn btn-success btn-small">✓ Mark Delivered</button>
+                </form>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ alert.message }}</pre>
+            </div>
+            <small style="color: #666; margin-top: 10px; display: block;">
+                Generated: {{ alert.generated_at[:19] }}
+            </small>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <p style="font-size: 18px; margin-bottom: 10px;">No pending alerts</p>
+            <p>Generate alerts to check for weather conditions exceeding thresholds</p>
+        </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 10px;">Alert Thresholds</h3>
+    <ul style="list-style: none; padding: 0;">
+        <li style="padding: 10px 0; border-bottom: 1px solid #ecf0f1;">
+            <strong>🌧️ Heavy Rain:</strong> ≥30mm in 3 hours
+        </li>
+        <li style="padding: 10px 0;">
+            <strong>🌡️ Heat Stress:</strong> Heat index ≥40
+        </li>
+    </ul>
+</div>
+{% endblock %}

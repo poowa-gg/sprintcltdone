@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <h2>Enrolled Farmers</h2>
+    <a href="{{ url_for('enroll_farmer') }}" class="btn btn-success">➕ Enroll New Farmer</a>
+</div>
+
+<div class="card">
+    {% if farmers %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Farmer ID</th>
+                    <th>Phone Number</th>
+                    <th>Location (Lat, Lon)</th>
+                    <th>Enrollment Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for farmer in farmers %}
+                <tr>
+                    <td><code>{{ farmer.farmer_id[:8] }}...</code></td>
+                    <td>{{ farmer.phone_number }}</td>
+                    <td>{{ "%.4f"|format(farmer.lat) }}, {{ "%.4f"|format(farmer.lon) }}</td>
+                    <td>{{ farmer.enrollment_date[:10] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="empty-state">
+            <p style="font-size: 18px; margin-bottom: 10px;">No farmers enrolled yet</p>
+            <p>Start by enrolling your first test farmer</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

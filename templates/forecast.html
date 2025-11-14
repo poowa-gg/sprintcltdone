@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 style="margin-bottom: 25px;">Query Weather Forecast</h2>
+
+<div class="card">
+    <form method="POST" action="{{ url_for('query_forecast') }}">
+        <div class="form-group">
+            <label for="lat">Latitude</label>
+            <input type="number" id="lat" name="lat" step="0.0001" placeholder="6.5244" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="lon">Longitude</label>
+            <input type="number" id="lon" name="lon" step="0.0001" placeholder="3.3792" required>
+        </div>
+        
+        <button type="submit" class="btn btn-success">🌤️ Query Forecast</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Quick Locations</h3>
+    <table>
+        <tr>
+            <th>Location</th>
+            <th>Coordinates</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>Lagos</td>
+            <td>6.5244, 3.3792</td>
+            <td><button class="btn btn-small" onclick="setCoords(6.5244, 3.3792)">Use</button></td>
+        </tr>
+        <tr>
+            <td>Kano</td>
+            <td>12.0022, 8.5919</td>
+            <td><button class="btn btn-small" onclick="setCoords(12.0022, 8.5919)">Use</button></td>
+        </tr>
+        <tr>
+            <td>Ibadan</td>
+            <td>7.3775, 3.9470</td>
+            <td><button class="btn btn-small" onclick="setCoords(7.3775, 3.9470)">Use</button></td>
+        </tr>
+    </table>
+</div>
+
+<script>
+function setCoords(lat, lon) {
+    document.getElementById('lat').value = lat;
+    document.getElementById('lon').value = lon;
+}
+</script>
+{% endblock %}

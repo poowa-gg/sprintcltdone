@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 style="margin-bottom: 25px;">Dashboard Overview</h2>
+
+<div class="stats">
+    <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <h3>Total Farmers</h3>
+        <div class="number">{{ farmer_count }}</div>
+        <p style="margin-top: 10px; opacity: 0.9;">Enrolled in system</p>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        <h3>Pending Alerts</h3>
+        <div class="number">{{ pending_alert_count }}</div>
+        <p style="margin-top: 10px; opacity: 0.9;">Need to be delivered</p>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+        <h3>Total Feedback</h3>
+        <div class="number">{{ feedback_count }}</div>
+        <p style="margin-top: 10px; opacity: 0.9;">Collected responses</p>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+        <h3>Cost-Saving</h3>
+        <div class="number">{{ cost_saving_count }}</div>
+        <p style="margin-top: 10px; opacity: 0.9;">Positive feedback</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 20px;">Quick Actions</h3>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <a href="{{ url_for('enroll_farmer') }}" class="btn btn-success">➕ Enroll New Farmer</a>
+        <form method="POST" action="{{ url_for('generate_alerts') }}" style="display: inline;">
+            <button type="submit" class="btn">🔔 Generate Alerts</button>
+        </form>
+        <a href="{{ url_for('add_feedback') }}" class="btn">💬 Add Feedback</a>
+        <a href="{{ url_for('forecast') }}" class="btn">🌤️ Query Forecast</a>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 15px;">Sprint 1 Success Metrics</h3>
+    <table>
+        <tr>
+            <th>Metric</th>
+            <th>Target</th>
+            <th>Current</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            <td>Test Farmers Enrolled</td>
+            <td>10</td>
+            <td>{{ farmer_count }}</td>
+            <td>
+                {% if farmer_count >= 10 %}
+                    <span class="badge badge-success">✓ Complete</span>
+                {% else %}
+                    <span class="badge badge-warning">{{ farmer_count }}/10</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Cost-Saving Feedback</td>
+            <td>3+</td>
+            <td>{{ cost_saving_count }}</td>
+            <td>
+                {% if cost_saving_count >= 3 %}
+                    <span class="badge badge-success">✓ Complete</span>
+                {% else %}
+                    <span class="badge badge-warning">{{ cost_saving_count }}/3</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Alert Delivery Period</td>
+            <td>7 days</td>
+            <td>In Progress</td>
+            <td><span class="badge badge-warning">Ongoing</span></td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

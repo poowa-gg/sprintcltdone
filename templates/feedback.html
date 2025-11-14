@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <h2>Farmer Feedback</h2>
+    <a href="{{ url_for('add_feedback') }}" class="btn btn-success">💬 Add Feedback</a>
+</div>
+
+<div class="card">
+    {% if feedbacks %}
+        <div style="margin-bottom: 20px;">
+            <strong>Total Feedback:</strong> {{ feedbacks|length }} | 
+            <strong>Cost-Saving:</strong> {{ feedbacks|selectattr('cost_saving_indicator')|list|length }}
+        </div>
+        
+        {% for fb in feedbacks %}
+        <div class="alert-message" style="margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div style="flex: 1;">
+                    <div style="margin-bottom: 10px;">
+                        <strong>Feedback ID:</strong> <code>{{ fb.feedback_id[:8] }}...</code><br>
+                        <strong>Farmer ID:</strong> <code>{{ fb.farmer_id[:8] }}...</code>
+                        {% if fb.farmer_id in farmers %}
+                            ({{ farmers[fb.farmer_id].phone_number }})
+                        {% endif %}
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                        <p style="margin: 0;">{{ fb.feedback_text }}</p>
+                    </div>
+                    <small style="color: #666;">{{ fb.feedback_date[:19] }}</small>
+                </div>
+                {% if fb.cost_saving_indicator %}
+                <span class="badge badge-success" style="margin-left: 15px;">💰 Cost-Saving</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <p style="font-size: 18px; margin-bottom: 10px;">No feedback collected yet</p>
+            <p>Start collecting feedback from farmers after alert delivery</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
