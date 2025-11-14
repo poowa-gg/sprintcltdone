@@ -20,6 +20,11 @@ FIREBASE_CONFIG_BASE64 = os.getenv('FIREBASE_CONFIG_BASE64')
 if FIREBASE_CONFIG_BASE64 and not FIREBASE_CONFIG:
     # Decode base64 and save temporarily (for cloud deployment)
     try:
+        # Add padding if needed
+        missing_padding = len(FIREBASE_CONFIG_BASE64) % 4
+        if missing_padding:
+            FIREBASE_CONFIG_BASE64 += '=' * (4 - missing_padding)
+        
         config_json = base64.b64decode(FIREBASE_CONFIG_BASE64).decode('utf-8')
         temp_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json')
         temp_file.write(config_json)
