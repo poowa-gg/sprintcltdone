@@ -1,0 +1,30 @@
+================================================================================
+RENDER ENVIRONMENT VARIABLES - QUICK REFERENCE
+================================================================================
+
+Copy these EXACTLY into Render (Name → Value):
+
+1. WEATHER_API_KEY → 6v6mO3wXjWWhDA4BXw85XgLkZhLhcgmD
+
+2. WEATHER_API_BASE_URL → https://api.tomorrow.io/v4
+
+3. APP_ID → climatovate
+
+4. USER_ID → admin
+
+5. SECRET_KEY → climatovate-production-secret-2024
+
+6. FIREBASE_CONFIG_BASE64 → [Open firebase_base64.txt and copy ALL content]
+
+================================================================================
+IMPORTANT FOR #6:
+- Open firebase_base64.txt in your project folder
+- Press Ctrl+A (select all)
+- Press Ctrl+C (copy)
+- Paste into Render's Value field
+- Should be one VERY LONG line (1000+ characters)
+================================================================================
+
+NO QUOTES! NO EXTRA SPACES! COPY EXACTLY AS SHOWN!
+
+================================================================================
