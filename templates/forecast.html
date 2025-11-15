@@ -1,54 +1,143 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 style="margin-bottom: 25px;">Query Weather Forecast</h2>
+<div style="margin-bottom: 30px;">
+    <h2 style="margin-bottom: 8px;">🌤️ Weather Forecast Query</h2>
+    <p style="color: #6c757d; font-size: 16px;">Get hyperlocal weather forecasts for any farm location</p>
+</div>
 
 <div class="card">
+    <h3 style="margin-bottom: 20px;">📍 Enter Location</h3>
+    <p style="color: #6c757d; margin-bottom: 25px;">
+        Query 72-hour weather forecast with 1km resolution for precise farm-level predictions
+    </p>
+    
     <form method="POST" action="{{ url_for('query_forecast') }}">
-        <div class="form-group">
-            <label for="lat">Latitude</label>
-            <input type="number" id="lat" name="lat" step="0.0001" placeholder="6.5244" required>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+                <label for="lat">🌍 Latitude</label>
+                <input type="number" id="lat" name="lat" step="0.0001" placeholder="6.5244" required>
+                <small style="color: #6c757d; display: block; margin-top: 5px;">
+                    Range: -90 to 90
+                </small>
+            </div>
+            
+            <div class="form-group">
+                <label for="lon">🌍 Longitude</label>
+                <input type="number" id="lon" name="lon" step="0.0001" placeholder="3.3792" required>
+                <small style="color: #6c757d; display: block; margin-top: 5px;">
+                    Range: -180 to 180
+                </small>
+            </div>
         </div>
         
-        <div class="form-group">
-            <label for="lon">Longitude</label>
-            <input type="number" id="lon" name="lon" step="0.0001" placeholder="3.3792" required>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 20px; margin-right: 10px;">🎯</span>
+                <strong style="color: #495057;">Forecast Details:</strong>
+            </div>
+            <ul style="margin: 0; padding-left: 20px; color: #6c757d;">
+                <li>72-hour detailed forecast</li>
+                <li>Hourly temperature, rainfall, and humidity</li>
+                <li>Alert threshold analysis</li>
+                <li>1km spatial resolution</li>
+            </ul>
         </div>
         
-        <button type="submit" class="btn btn-success">🌤️ Query Forecast</button>
+        <button type="submit" class="btn btn-success" style="width: 100%; padding: 15px; font-size: 16px;">
+            🌤️ Get Weather Forecast
+        </button>
     </form>
 </div>
 
 <div class="card">
-    <h3 style="margin-bottom: 15px;">Quick Locations</h3>
-    <table>
-        <tr>
-            <th>Location</th>
-            <th>Coordinates</th>
-            <th>Action</th>
-        </tr>
-        <tr>
-            <td>Lagos</td>
-            <td>6.5244, 3.3792</td>
-            <td><button class="btn btn-small" onclick="setCoords(6.5244, 3.3792)">Use</button></td>
-        </tr>
-        <tr>
-            <td>Kano</td>
-            <td>12.0022, 8.5919</td>
-            <td><button class="btn btn-small" onclick="setCoords(12.0022, 8.5919)">Use</button></td>
-        </tr>
-        <tr>
-            <td>Ibadan</td>
-            <td>7.3775, 3.9470</td>
-            <td><button class="btn btn-small" onclick="setCoords(7.3775, 3.9470)">Use</button></td>
-        </tr>
-    </table>
+    <h3 style="margin-bottom: 20px;">🚀 Quick Location Access</h3>
+    <p style="color: #6c757d; margin-bottom: 20px;">
+        Click on any location to automatically fill coordinates for major Nigerian farming regions
+    </p>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>🌾 Region</th>
+                    <th>📍 Location</th>
+                    <th>🌍 Coordinates</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Lagos State</strong></td>
+                    <td>Lagos (Urban farming)</td>
+                    <td><code>6.5244, 3.3792</code></td>
+                    <td>
+                        <button class="btn btn-small" onclick="setCoords(6.5244, 3.3792)" type="button">
+                            Use Location
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Kano State</strong></td>
+                    <td>Kano (Grain belt)</td>
+                    <td><code>12.0022, 8.5919</code></td>
+                    <td>
+                        <button class="btn btn-small" onclick="setCoords(12.0022, 8.5919)" type="button">
+                            Use Location
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Oyo State</strong></td>
+                    <td>Ibadan (Root crops)</td>
+                    <td><code>7.3775, 3.9470</code></td>
+                    <td>
+                        <button class="btn btn-small" onclick="setCoords(7.3775, 3.9470)" type="button">
+                            Use Location
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Plateau State</strong></td>
+                    <td>Jos (Vegetables)</td>
+                    <td><code>9.8965, 8.8583</code></td>
+                    <td>
+                        <button class="btn btn-small" onclick="setCoords(9.8965, 8.8583)" type="button">
+                            Use Location
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Kaduna State</strong></td>
+                    <td>Kaduna (Mixed farming)</td>
+                    <td><code>10.5105, 7.4165</code></td>
+                    <td>
+                        <button class="btn btn-small" onclick="setCoords(10.5105, 7.4165)" type="button">
+                            Use Location
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
 function setCoords(lat, lon) {
     document.getElementById('lat').value = lat;
     document.getElementById('lon').value = lon;
+    
+    // Visual feedback
+    const latInput = document.getElementById('lat');
+    const lonInput = document.getElementById('lon');
+    
+    latInput.style.background = '#d4edda';
+    lonInput.style.background = '#d4edda';
+    
+    setTimeout(() => {
+        latInput.style.background = '';
+        lonInput.style.background = '';
+    }, 1000);
 }
 </script>
 {% endblock %}

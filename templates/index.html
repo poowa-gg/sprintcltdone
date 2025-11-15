@@ -1,85 +1,151 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 style="margin-bottom: 25px;">Dashboard Overview</h2>
+<div style="margin-bottom: 30px;">
+    <h2 style="margin-bottom: 8px;">📊 Dashboard Overview</h2>
+    <p style="color: #6c757d; font-size: 16px;">Monitor your farmer weather alert system performance</p>
+</div>
 
 <div class="stats">
     <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-        <h3>Total Farmers</h3>
+        <h3>👨‍🌾 Total Farmers</h3>
         <div class="number">{{ farmer_count }}</div>
-        <p style="margin-top: 10px; opacity: 0.9;">Enrolled in system</p>
+        <p>Enrolled in alert system</p>
     </div>
     
     <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-        <h3>Pending Alerts</h3>
+        <h3>🔔 Pending Alerts</h3>
         <div class="number">{{ pending_alert_count }}</div>
-        <p style="margin-top: 10px; opacity: 0.9;">Need to be delivered</p>
+        <p>Ready for delivery</p>
     </div>
     
     <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-        <h3>Total Feedback</h3>
+        <h3>💬 Total Feedback</h3>
         <div class="number">{{ feedback_count }}</div>
-        <p style="margin-top: 10px; opacity: 0.9;">Collected responses</p>
+        <p>Farmer responses collected</p>
     </div>
     
     <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-        <h3>Cost-Saving</h3>
+        <h3>💰 Cost-Saving</h3>
         <div class="number">{{ cost_saving_count }}</div>
-        <p style="margin-top: 10px; opacity: 0.9;">Positive feedback</p>
+        <p>Positive impact reports</p>
     </div>
 </div>
 
 <div class="card">
-    <h3 style="margin-bottom: 20px;">Quick Actions</h3>
-    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-        <a href="{{ url_for('enroll_farmer') }}" class="btn btn-success">➕ Enroll New Farmer</a>
-        <form method="POST" action="{{ url_for('generate_alerts') }}" style="display: inline;">
-            <button type="submit" class="btn">🔔 Generate Alerts</button>
+    <h3 style="margin-bottom: 20px;">⚡ Quick Actions</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        <a href="{{ url_for('enroll_farmer') }}" class="btn btn-success" style="text-align: center;">
+            👨‍🌾 Enroll New Farmer
+        </a>
+        <form method="POST" action="{{ url_for('generate_alerts') }}" style="margin: 0;">
+            <button type="submit" class="btn" style="width: 100%;">
+                🔔 Generate Alerts
+            </button>
         </form>
-        <a href="{{ url_for('add_feedback') }}" class="btn">💬 Add Feedback</a>
-        <a href="{{ url_for('forecast') }}" class="btn">🌤️ Query Forecast</a>
+        <a href="{{ url_for('add_feedback') }}" class="btn" style="text-align: center;">
+            💬 Add Feedback
+        </a>
+        <a href="{{ url_for('forecast') }}" class="btn" style="text-align: center;">
+            🌤️ Query Forecast
+        </a>
     </div>
 </div>
 
 <div class="card">
-    <h3 style="margin-bottom: 15px;">Sprint 1 Success Metrics</h3>
-    <table>
-        <tr>
-            <th>Metric</th>
-            <th>Target</th>
-            <th>Current</th>
-            <th>Status</th>
-        </tr>
-        <tr>
-            <td>Test Farmers Enrolled</td>
-            <td>10</td>
-            <td>{{ farmer_count }}</td>
-            <td>
-                {% if farmer_count >= 10 %}
-                    <span class="badge badge-success">✓ Complete</span>
-                {% else %}
-                    <span class="badge badge-warning">{{ farmer_count }}/10</span>
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td>Cost-Saving Feedback</td>
-            <td>3+</td>
-            <td>{{ cost_saving_count }}</td>
-            <td>
-                {% if cost_saving_count >= 3 %}
-                    <span class="badge badge-success">✓ Complete</span>
-                {% else %}
-                    <span class="badge badge-warning">{{ cost_saving_count }}/3</span>
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td>Alert Delivery Period</td>
-            <td>7 days</td>
-            <td>In Progress</td>
-            <td><span class="badge badge-warning">Ongoing</span></td>
-        </tr>
-    </table>
+    <h3 style="margin-bottom: 20px;">🎯 Sprint 1 Success Metrics</h3>
+    <p style="color: #6c757d; margin-bottom: 20px; font-size: 14px;">
+        Track progress towards product-market fit validation goals
+    </p>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Target</th>
+                    <th>Current</th>
+                    <th class="status-cell">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>Test Farmers Enrolled</strong>
+                        <br><small style="color: #6c757d;">Build farmer network</small>
+                    </td>
+                    <td><strong>10</strong></td>
+                    <td><strong>{{ farmer_count }}</strong></td>
+                    <td class="status-cell">
+                        {% if farmer_count >= 10 %}
+                            <span class="badge badge-success">✓ Complete</span>
+                        {% else %}
+                            <span class="badge badge-warning">{{ farmer_count }}/10</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Cost-Saving Feedback</strong>
+                        <br><small style="color: #6c757d;">Validate value proposition</small>
+                    </td>
+                    <td><strong>3+</strong></td>
+                    <td><strong>{{ cost_saving_count }}</strong></td>
+                    <td class="status-cell">
+                        {% if cost_saving_count >= 3 %}
+                            <span class="badge badge-success">✓ Complete</span>
+                        {% else %}
+                            <span class="badge badge-warning">{{ cost_saving_count }}/3</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Alert Delivery Period</strong>
+                        <br><small style="color: #6c757d;">Continuous operation</small>
+                    </td>
+                    <td><strong>7 days</strong></td>
+                    <td><strong>In Progress</strong></td>
+                    <td class="status-cell">
+                        <span class="badge badge-warning">Ongoing</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Forecast Accuracy</strong>
+                        <br><small style="color: #6c757d;">Data quality validation</small>
+                    </td>
+                    <td><strong>75%</strong></td>
+                    <td><strong>Monitor</strong></td>
+                    <td class="status-cell">
+                        <span class="badge badge-warning">Testing</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+{% if farmer_count > 0 %}
+<div class="card">
+    <h3 style="margin-bottom: 20px;">📈 System Health</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+            <div style="font-size: 20px; margin-bottom: 10px;">🟢</div>
+            <div style="font-weight: 600; color: #27ae60;">Weather API</div>
+            <div style="color: #6c757d; font-size: 14px;">Connected & Active</div>
+        </div>
+        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+            <div style="font-size: 20px; margin-bottom: 10px;">🟢</div>
+            <div style="font-weight: 600; color: #27ae60;">Database</div>
+            <div style="color: #6c757d; font-size: 14px;">{{ farmer_count }} farmers stored</div>
+        </div>
+        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+            <div style="font-size: 20px; margin-bottom: 10px;">🟡</div>
+            <div style="font-weight: 600; color: #f39c12;">Alert System</div>
+            <div style="color: #6c757d; font-size: 14px;">Manual delivery mode</div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

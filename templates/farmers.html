@@ -1,38 +1,94 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-    <h2>Enrolled Farmers</h2>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+    <div>
+        <h2 style="margin-bottom: 5px;">👨‍🌾 Enrolled Farmers</h2>
+        <p style="color: #6c757d; font-size: 14px;">Manage your farmer database for weather alerts</p>
+    </div>
     <a href="{{ url_for('enroll_farmer') }}" class="btn btn-success">➕ Enroll New Farmer</a>
 </div>
 
 <div class="card">
     {% if farmers %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Farmer ID</th>
-                    <th>Phone Number</th>
-                    <th>Location (Lat, Lon)</th>
-                    <th>Enrollment Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for farmer in farmers %}
-                <tr>
-                    <td><code>{{ farmer.farmer_id[:8] }}...</code></td>
-                    <td>{{ farmer.phone_number }}</td>
-                    <td>{{ "%.4f"|format(farmer.lat) }}, {{ "%.4f"|format(farmer.lon) }}</td>
-                    <td>{{ farmer.enrollment_date[:10] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div style="margin-bottom: 20px;">
+            <h3 style="color: #495057; margin-bottom: 10px;">Total Farmers: {{ farmers|length }}</h3>
+            <p style="color: #6c757d; font-size: 14px;">All farmers enrolled in the weather alert system</p>
+        </div>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Farmer ID</th>
+                        <th>Phone Number</th>
+                        <th>Farm Location</th>
+                        <th>Coordinates</th>
+                        <th class="status-cell">Status</th>
+                        <th>Enrolled Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for farmer in farmers %}
+                    <tr>
+                        <td>
+                            <code style="background: #f8f9fa; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                {{ farmer.farmer_id[:8] }}...
+                            </code>
+                        </td>
+                        <td>
+                            <strong>{{ farmer.phone_number }}</strong>
+                        </td>
+                        <td>
+                            <span style="color: #495057;">
+                                📍 Farm Location
+                            </span>
+                        </td>
+                        <td>
+                            <span style="font-family: monospace; font-size: 13px; color: #6c757d;">
+                                {{ "%.4f"|format(farmer.lat) }}, {{ "%.4f"|format(farmer.lon) }}
+                            </span>
+                        </td>
+                        <td class="status-cell">
+                            <span class="badge badge-success">✓ Active</span>
+                        </td>
+                        <td>
+                            <span style="color: #6c757d;">
+                                {{ farmer.enrollment_date[:10] }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <div class="empty-state">
-            <p style="font-size: 18px; margin-bottom: 10px;">No farmers enrolled yet</p>
-            <p>Start by enrolling your first test farmer</p>
+            <div style="font-size: 48px; margin-bottom: 20px;">👨‍🌾</div>
+            <h3>No Farmers Enrolled Yet</h3>
+            <p style="margin-bottom: 20px;">Start building your farmer network by enrolling your first farmer</p>
+            <a href="{{ url_for('enroll_farmer') }}" class="btn btn-success">➕ Enroll First Farmer</a>
         </div>
     {% endif %}
 </div>
+
+{% if farmers %}
+<div class="card">
+    <h3 style="margin-bottom: 15px;">📊 Farmer Statistics</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <div style="font-size: 24px; font-weight: bold; color: #27ae60;">{{ farmers|length }}</div>
+            <div style="color: #6c757d; font-size: 14px;">Total Farmers</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <div style="font-size: 24px; font-weight: bold; color: #3498db;">{{ farmers|length }}</div>
+            <div style="color: #6c757d; font-size: 14px;">Active Farmers</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <div style="font-size: 24px; font-weight: bold; color: #f39c12;">{{ farmers|length }}</div>
+            <div style="color: #6c757d; font-size: 14px;">Receiving Alerts</div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

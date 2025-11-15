@@ -1,0 +1,53 @@
+================================================================================
+FIX RENDER START COMMAND - DO THIS NOW
+================================================================================
+
+ERROR: bash: line 1: web:: command not found
+
+PROBLEM: Render is reading the start command incorrectly
+
+FIX IN 4 STEPS:
+================================================================================
+
+STEP 1: Go to Render Dashboard
+-------------------------------
+https://dashboard.render.com
+
+STEP 2: Open Settings
+---------------------
+1. Click your service: climatovate-sprint1
+2. Click "Settings" (left sidebar)
+
+STEP 3: Fix Start Command
+--------------------------
+1. Scroll down to "Build & Deploy"
+2. Find "Start Command"
+3. Change it to EXACTLY this:
+
+   gunicorn web_app:app
+
+4. Click "Save Changes"
+
+STEP 4: Manual Redeploy
+------------------------
+1. Click "Manual Deploy" (top right)
+2. Click "Deploy latest commit"
+3. Wait 5-10 minutes
+
+================================================================================
+IMPORTANT:
+================================================================================
+
+Start Command should be:
+✓ gunicorn web_app:app
+
+NOT:
+✗ web: gunicorn web_app:app
+✗ python web_app.py
+✗ flask run
+
+================================================================================
+
+After this fix, your app will deploy successfully! 🚀
+
+================================================================================

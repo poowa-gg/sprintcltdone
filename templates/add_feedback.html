@@ -1,46 +1,109 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 style="margin-bottom: 25px;">Add Farmer Feedback</h2>
+<div style="margin-bottom: 30px;">
+    <h2 style="margin-bottom: 8px;">💬 Add Farmer Feedback</h2>
+    <p style="color: #6c757d; font-size: 16px;">Record farmer responses to weather alerts for impact validation</p>
+</div>
 
 <div class="card">
+    <h3 style="margin-bottom: 20px;">📝 Record Feedback</h3>
+    <p style="color: #6c757d; margin-bottom: 25px;">
+        Collect farmer responses about the effectiveness and impact of weather alerts
+    </p>
+    
     <form method="POST">
         <div class="form-group">
-            <label for="farmer_id">Select Farmer</label>
+            <label for="farmer_id">👨‍🌾 Select Farmer</label>
             <select id="farmer_id" name="farmer_id" required>
-                <option value="">-- Choose a farmer --</option>
+                <option value="">-- Choose a farmer from your network --</option>
                 {% for farmer in farmers %}
                 <option value="{{ farmer.farmer_id }}">
-                    {{ farmer.phone_number }} ({{ "%.4f"|format(farmer.lat) }}, {{ "%.4f"|format(farmer.lon) }})
+                    📱 {{ farmer.phone_number }} - 📍 {{ "%.4f"|format(farmer.lat) }}, {{ "%.4f"|format(farmer.lon) }}
                 </option>
                 {% endfor %}
             </select>
+            <small style="color: #6c757d; display: block; margin-top: 5px;">
+                Select the farmer who provided this feedback
+            </small>
         </div>
         
         <div class="form-group">
-            <label for="feedback_text">Feedback</label>
-            <textarea id="feedback_text" name="feedback_text" placeholder="Enter farmer's feedback about the alert..." required></textarea>
+            <label for="feedback_text">💬 Farmer's Response</label>
+            <textarea id="feedback_text" name="feedback_text" placeholder="Enter the farmer's exact words about the weather alert..." required></textarea>
+            <small style="color: #6c757d; display: block; margin-top: 5px;">
+                Record the farmer's response as accurately as possible
+            </small>
         </div>
         
-        <div class="form-group checkbox-group">
-            <input type="checkbox" id="cost_saving" name="cost_saving">
-            <label for="cost_saving" style="margin: 0;">This feedback indicates cost savings or prevented loss</label>
+        <div class="form-group">
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #f39c12;">
+                <div class="checkbox-group" style="margin-bottom: 10px;">
+                    <input type="checkbox" id="cost_saving" name="cost_saving">
+                    <label for="cost_saving" style="margin: 0; font-weight: 600; color: #495057;">
+                        💰 This feedback indicates cost savings or prevented loss
+                    </label>
+                </div>
+                <small style="color: #6c757d; display: block;">
+                    Check this box if the farmer mentioned saving money, preventing waste, or avoiding losses due to the weather alert
+                </small>
+            </div>
         </div>
         
-        <div style="display: flex; gap: 10px;">
-            <button type="submit" class="btn btn-success">Save Feedback</button>
-            <a href="{{ url_for('feedback') }}" class="btn">Cancel</a>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-success" style="min-width: 150px;">
+                💬 Save Feedback
+            </button>
+            <a href="{{ url_for('feedback') }}" class="btn" style="min-width: 100px;">
+                Cancel
+            </a>
         </div>
     </form>
 </div>
 
 <div class="card">
-    <h3 style="margin-bottom: 15px;">Example Feedback</h3>
-    <ul style="padding-left: 20px;">
-        <li style="margin-bottom: 10px;">"The alert helped me delay fertilizer application and saved money"</li>
-        <li style="margin-bottom: 10px;">"I avoided spraying during the rain, preventing waste"</li>
-        <li style="margin-bottom: 10px;">"The heat warning helped me schedule irrigation better"</li>
-        <li>"Alert was accurate and timely, very helpful"</li>
-    </ul>
+    <h3 style="margin-bottom: 20px;">💡 Example Farmer Responses</h3>
+    <p style="color: #6c757d; margin-bottom: 20px;">
+        Use these examples as a guide for the types of feedback to collect
+    </p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div style="padding: 15px; background: #d4edda; border-radius: 8px; border-left: 4px solid #27ae60;">
+            <div style="font-weight: 600; color: #155724; margin-bottom: 8px;">
+                💰 Cost-Saving Feedback:
+            </div>
+            <ul style="margin: 0; padding-left: 20px; color: #155724;">
+                <li>"The alert helped me delay fertilizer application and saved money"</li>
+                <li>"I avoided spraying during the rain, preventing waste"</li>
+                <li>"Thanks to the warning, I didn't lose my harvest"</li>
+            </ul>
+        </div>
+        
+        <div style="padding: 15px; background: #cce7ff; border-radius: 8px; border-left: 4px solid #3498db;">
+            <div style="font-weight: 600; color: #0c5aa6; margin-bottom: 8px;">
+                📝 General Feedback:
+            </div>
+            <ul style="margin: 0; padding-left: 20px; color: #0c5aa6;">
+                <li>"The heat warning helped me schedule irrigation better"</li>
+                <li>"Alert was accurate and timely, very helpful"</li>
+                <li>"I received the message and took precautions"</li>
+            </ul>
+        </div>
+    </div>
 </div>
+
+{% if farmers|length == 0 %}
+<div class="card" style="background: #fff3cd; border: 1px solid #ffeaa7;">
+    <div style="text-align: center; padding: 20px;">
+        <div style="font-size: 48px; margin-bottom: 15px;">👨‍🌾</div>
+        <h3 style="color: #856404;">No Farmers Enrolled Yet</h3>
+        <p style="color: #856404; margin-bottom: 20px;">
+            You need to enroll farmers before you can collect feedback
+        </p>
+        <a href="{{ url_for('enroll_farmer') }}" class="btn btn-success">
+            👨‍🌾 Enroll First Farmer
+        </a>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

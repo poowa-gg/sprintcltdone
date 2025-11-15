@@ -1,61 +1,127 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-    <h2>Weather Alerts</h2>
-    <form method="POST" action="{{ url_for('generate_alerts') }}" style="display: inline;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+    <div>
+        <h2 style="margin-bottom: 5px;">🔔 Weather Alerts</h2>
+        <p style="color: #6c757d; font-size: 14px;">Monitor and deliver weather warnings to farmers</p>
+    </div>
+    <form method="POST" action="{{ url_for('generate_alerts') }}" style="margin: 0;">
         <button type="submit" class="btn btn-success">🔔 Generate New Alerts</button>
     </form>
 </div>
 
 <div class="card">
-    <h3 style="margin-bottom: 15px;">Pending Alerts</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <h3 style="margin: 0;">📋 Pending Alerts</h3>
+        {% if alerts %}
+            <span class="badge" style="background: #f39c12; color: white; padding: 8px 16px;">
+                {{ alerts|length }} Alert{{ 's' if alerts|length != 1 else '' }} Pending
+            </span>
+        {% endif %}
+    </div>
+    
     {% if alerts %}
         {% for alert in alerts %}
-        <div class="alert-message">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                <div>
-                    <strong>Alert ID:</strong> <code>{{ alert.alert_id[:8] }}...</code><br>
-                    <strong>Farmer ID:</strong> <code>{{ alert.farmer_id[:8] }}...</code><br>
-                    <strong>Type:</strong> 
-                    {% if alert.peril_type == 'rain' %}
-                        <span class="badge" style="background: #3498db; color: white;">🌧️ Heavy Rain</span>
-                    {% else %}
-                        <span class="badge" style="background: #e74c3c; color: white;">🌡️ Heat Stress</span>
-                    {% endif %}
-                    <br>
-                    <strong>Severity:</strong> {{ "%.1f"|format(alert.severity) }}
-                    {% if alert.peril_type == 'rain' %}mm{% else %}index{% endif %}
+        <div class="alert-message" style="margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; flex-wrap: wrap; gap: 15px;">
+                <div style="flex: 1; min-width: 250px;">
+                    <div style="margin-bottom: 10px;">
+                        <strong>Alert ID:</strong> 
+                        <code style="background: #f8f9fa; padding: 2px 6px; border-radius: 3px; font-size: 12px;">
+                            {{ alert.alert_id[:8] }}...
+                        </code>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Farmer ID:</strong> 
+                        <code style="background: #f8f9fa; padding: 2px 6px; border-radius: 3px; font-size: 12px;">
+                            {{ alert.farmer_id[:8] }}...
+                        </code>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Alert Type:</strong> 
+                        {% if alert.peril_type == 'rain' %}
+                            <span class="badge" style="background: #3498db; color: white; padding: 4px 12px;">
+                                🌧️ Heavy Rain Alert
+                            </span>
+                        {% else %}
+                            <span class="badge" style="background: #e74c3c; color: white; padding: 4px 12px;">
+                                🌡️ Heat Stress Alert
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <strong>Severity:</strong> 
+                        <span style="font-weight: 600; color: #e74c3c;">
+                            {{ "%.1f"|format(alert.severity) }}
+                            {% if alert.peril_type == 'rain' %}mm{% else %} heat index{% endif %}
+                        </span>
+                    </div>
                 </div>
-                <form method="POST" action="{{ url_for('mark_delivered', alert_id=alert.alert_id) }}">
-                    <button type="submit" class="btn btn-success btn-small">✓ Mark Delivered</button>
-                </form>
+                <div style="text-align: right;">
+                    <form method="POST" action="{{ url_for('mark_delivered', alert_id=alert.alert_id) }}" style="margin: 0;">
+                        <button type="submit" class="btn btn-success btn-small">
+                            ✓ Mark as Delivered
+                        </button>
+                    </form>
+                    <div style="margin-top: 10px; font-size: 12px; color: #6c757d;">
+                        Generated: {{ alert.generated_at[:16] }}
+                    </div>
+                </div>
             </div>
-            <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 10px;">
-                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ alert.message }}</pre>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
+                <h4 style="margin-bottom: 10px; color: #495057;">📱 Alert Message for Farmer:</h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #3498db;">
+                    <pre style="white-space: pre-wrap; font-family: inherit; margin: 0; font-size: 14px; line-height: 1.5;">{{ alert.message }}</pre>
+                </div>
             </div>
-            <small style="color: #666; margin-top: 10px; display: block;">
-                Generated: {{ alert.generated_at[:19] }}
-            </small>
         </div>
         {% endfor %}
     {% else %}
         <div class="empty-state">
-            <p style="font-size: 18px; margin-bottom: 10px;">No pending alerts</p>
-            <p>Generate alerts to check for weather conditions exceeding thresholds</p>
+            <div style="font-size: 48px; margin-bottom: 20px;">🔔</div>
+            <h3>No Pending Alerts</h3>
+            <p style="margin-bottom: 20px;">Generate alerts to check for weather conditions that exceed safety thresholds</p>
+            <form method="POST" action="{{ url_for('generate_alerts') }}" style="margin: 0;">
+                <button type="submit" class="btn btn-success">🔔 Generate Alerts Now</button>
+            </form>
         </div>
     {% endif %}
 </div>
 
 <div class="card">
-    <h3 style="margin-bottom: 10px;">Alert Thresholds</h3>
-    <ul style="list-style: none; padding: 0;">
-        <li style="padding: 10px 0; border-bottom: 1px solid #ecf0f1;">
-            <strong>🌧️ Heavy Rain:</strong> ≥30mm in 3 hours
-        </li>
-        <li style="padding: 10px 0;">
-            <strong>🌡️ Heat Stress:</strong> Heat index ≥40
-        </li>
-    </ul>
+    <h3 style="margin-bottom: 20px;">⚙️ Alert Configuration</h3>
+    <p style="color: #6c757d; margin-bottom: 20px; font-size: 14px;">
+        Current thresholds for generating weather alerts to farmers
+    </p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #3498db;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">🌧️</span>
+                <strong style="color: #2c3e50;">Heavy Rain Alert</strong>
+            </div>
+            <div style="color: #6c757d; margin-bottom: 10px;">
+                Triggers when rainfall exceeds safety threshold
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #3498db;">
+                ≥30mm in 3 hours
+            </div>
+        </div>
+        
+        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #e74c3c;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">🌡️</span>
+                <strong style="color: #2c3e50;">Heat Stress Alert</strong>
+            </div>
+            <div style="color: #6c757d; margin-bottom: 10px;">
+                Triggers when heat conditions become dangerous
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #e74c3c;">
+                Heat index ≥40
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

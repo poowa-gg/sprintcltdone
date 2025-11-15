@@ -1,45 +1,134 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-    <h2>Farmer Feedback</h2>
-    <a href="{{ url_for('add_feedback') }}" class="btn btn-success">💬 Add Feedback</a>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+    <div>
+        <h2 style="margin-bottom: 5px;">💬 Farmer Feedback</h2>
+        <p style="color: #6c757d; font-size: 14px;">Collect and analyze farmer responses to validate impact</p>
+    </div>
+    <a href="{{ url_for('add_feedback') }}" class="btn btn-success">💬 Add New Feedback</a>
 </div>
 
+{% if feedbacks %}
 <div class="card">
-    {% if feedbacks %}
-        <div style="margin-bottom: 20px;">
-            <strong>Total Feedback:</strong> {{ feedbacks|length }} | 
-            <strong>Cost-Saving:</strong> {{ feedbacks|selectattr('cost_saving_indicator')|list|length }}
+    <h3 style="margin-bottom: 20px;">📊 Feedback Summary</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <div style="font-size: 24px; font-weight: bold; color: #3498db;">{{ feedbacks|length }}</div>
+            <div style="color: #6c757d; font-size: 14px;">Total Responses</div>
         </div>
-        
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <div style="font-size: 24px; font-weight: bold; color: #27ae60;">{{ feedbacks|selectattr('cost_saving_indicator')|list|length }}</div>
+            <div style="color: #6c757d; font-size: 14px;">Cost-Saving Reports</div>
+        </div>
+        <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <div style="font-size: 24px; font-weight: bold; color: #f39c12;">
+                {% if feedbacks|length > 0 %}
+                    {{ "%.0f"|format((feedbacks|selectattr('cost_saving_indicator')|list|length / feedbacks|length) * 100) }}%
+                {% else %}
+                    0%
+                {% endif %}
+            </div>
+            <div style="color: #6c757d; font-size: 14px;">Success Rate</div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <h3 style="margin: 0;">📝 All Farmer Feedback</h3>
+        {% if feedbacks %}
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span class="badge" style="background: #3498db; color: white; padding: 6px 12px;">
+                    {{ feedbacks|length }} Total
+                </span>
+                <span class="badge badge-success" style="padding: 6px 12px;">
+                    {{ feedbacks|selectattr('cost_saving_indicator')|list|length }} Cost-Saving
+                </span>
+            </div>
+        {% endif %}
+    </div>
+    
+    {% if feedbacks %}
         {% for fb in feedbacks %}
-        <div class="alert-message" style="margin-bottom: 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div style="flex: 1;">
+        <div class="alert-message {% if fb.cost_saving_indicator %}cost-saving-feedback{% else %}general-feedback{% endif %}" style="margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; flex-wrap: wrap; gap: 15px;">
+                <div style="flex: 1; min-width: 250px;">
                     <div style="margin-bottom: 10px;">
-                        <strong>Feedback ID:</strong> <code>{{ fb.feedback_id[:8] }}...</code><br>
-                        <strong>Farmer ID:</strong> <code>{{ fb.farmer_id[:8] }}...</code>
+                        <strong>Feedback ID:</strong> 
+                        <code style="background: #f8f9fa; padding: 2px 6px; border-radius: 3px; font-size: 12px;">
+                            {{ fb.feedback_id[:8] }}...
+                        </code>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>👨‍🌾 Farmer:</strong> 
+                        <code style="background: #f8f9fa; padding: 2px 6px; border-radius: 3px; font-size: 12px;">
+                            {{ fb.farmer_id[:8] }}...
+                        </code>
                         {% if fb.farmer_id in farmers %}
-                            ({{ farmers[fb.farmer_id].phone_number }})
+                            <span style="color: #6c757d; margin-left: 8px;">
+                                ({{ farmers[fb.farmer_id].phone_number }})
+                            </span>
                         {% endif %}
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
-                        <p style="margin: 0;">{{ fb.feedback_text }}</p>
+                    <div style="margin-bottom: 10px;">
+                        <small style="color: #6c757d;">
+                            📅 {{ fb.feedback_date[:16] }}
+                        </small>
                     </div>
-                    <small style="color: #666;">{{ fb.feedback_date[:19] }}</small>
+                </div>
+                <div style="text-align: right;">
+                    {% if fb.cost_saving_indicator %}
+                        <span class="badge badge-success" style="padding: 8px 16px; font-size: 13px;">
+                            💰 Cost-Saving Impact
+                        </span>
+                    {% else %}
+                        <span class="badge" style="background: #6c757d; color: white; padding: 8px 16px; font-size: 13px;">
+                            📝 General Feedback
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
+                <h4 style="margin-bottom: 10px; color: #495057;">💬 Farmer's Response:</h4>
+                <div class="feedback-content {% if fb.cost_saving_indicator %}cost-saving-content{% else %}general-content{% endif %}" style="background: #f8f9fa; padding: 15px; border-radius: 6px;">
+                    <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #2c3e50;">
+                        "{{ fb.feedback_text }}"
+                    </p>
                 </div>
                 {% if fb.cost_saving_indicator %}
-                <span class="badge badge-success" style="margin-left: 15px;">💰 Cost-Saving</span>
+                    <div style="margin-top: 10px; padding: 10px; background: #d4edda; border-radius: 6px; color: #155724;">
+                        <strong>✅ Impact Confirmed:</strong> This farmer reported cost savings or prevented losses thanks to the weather alert.
+                    </div>
                 {% endif %}
             </div>
         </div>
         {% endfor %}
     {% else %}
         <div class="empty-state">
-            <p style="font-size: 18px; margin-bottom: 10px;">No feedback collected yet</p>
-            <p>Start collecting feedback from farmers after alert delivery</p>
+            <div style="font-size: 48px; margin-bottom: 20px;">💬</div>
+            <h3>No Farmer Feedback Yet</h3>
+            <p style="margin-bottom: 20px;">Start collecting feedback from farmers after delivering weather alerts</p>
+            <a href="{{ url_for('add_feedback') }}" class="btn btn-success">💬 Add First Feedback</a>
         </div>
     {% endif %}
 </div>
+
+{% if feedbacks and feedbacks|selectattr('cost_saving_indicator')|list|length >= 3 %}
+<div class="card" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1px solid #28a745;">
+    <div style="text-align: center;">
+        <div style="font-size: 48px; margin-bottom: 15px;">🎉</div>
+        <h3 style="color: #155724; margin-bottom: 10px;">Sprint 1 Goal Achieved!</h3>
+        <p style="color: #155724; font-size: 16px; margin-bottom: 15px;">
+            You've collected <strong>{{ feedbacks|selectattr('cost_saving_indicator')|list|length }}</strong> cost-saving feedback responses, 
+            exceeding the target of 3+ for product-market fit validation.
+        </p>
+        <div style="background: rgba(255,255,255,0.8); padding: 15px; border-radius: 8px; display: inline-block;">
+            <strong style="color: #155724;">✅ PMF Validation: Success</strong>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
